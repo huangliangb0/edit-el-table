@@ -5,10 +5,16 @@
         {{ tableColumn[0].edit ? '完成编辑': '编辑姓名列' }}
       </el-button>
       <el-button @click="toggleColClick('age')">
-        编辑年龄列
+        {{ tableColumn[1].edit ? '完成编辑': '编辑年龄列' }}
+      </el-button>
+      <el-button @click="toggleColClick('sex')">
+        {{ tableColumn[2].edit ? '完成编辑': '编辑性别' }}
       </el-button>
       <el-button @click="limitRowClick(2)">
         禁止前两行输入
+      </el-button>
+      <el-button @click="unlockRowClick(2)">
+        解除输入
       </el-button>
     </el-row>
     <EditTable
@@ -21,8 +27,8 @@
       </template>
       <!-- 默认插槽 -->
       <template v-slot="{ row }">
-        <el-button type="primary" @click="editCurItemClick(row)">编辑</el-button>
-        <el-button @click="editCompleteClick(row)">完成</el-button>
+        <el-button type="primary" @click="editCurItemClick(row)" size="mini">编辑</el-button>
+        <el-button @click="editCompleteClick(row)" size="mini">完成</el-button>
       </template>
     </EditTable>
   </div>
@@ -48,7 +54,7 @@ export default {
       tableColumn: [
         { prop: 'name', label: '姓名', edit: false, disable: false, editType: 'input' },
         { prop: 'age', label: '年龄', edit: false, disable: false },
-        { prop: 'sex', label: '性别', edit: true, editType: 'select', list: sexList, listKeys: sexListKeys  },
+        { prop: 'sex', label: '性别', edit: false, editType: 'select', list: sexList, listKeys: sexListKeys  },
         { isSlot: true, slotName: 'sex', label: '性别' },
         { isSlot: true, label: '操作' },
       ],
@@ -106,7 +112,12 @@ export default {
     limitRowClick(count=2) {
       for(let i = 0; i < count; i++) {
         this.$set(this.tableData[i], 'disabled', true)
-        this.$forceUpdate()
+      }
+    },
+    // 解除禁止
+    unlockRowClick(count=2) {
+      for(let i = 0; i < count; i++) {
+        this.tableData[i].disabled = false
       }
     }
   }
