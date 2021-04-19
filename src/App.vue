@@ -16,6 +16,9 @@
       <el-button @click="unlockRowClick(2)">
         解除输入
       </el-button>
+      <el-button @click="addClick">
+        添加+
+      </el-button>
     </el-row>
     <EditTable
       :table-column="tableColumn"
@@ -23,7 +26,8 @@
     > 
       <!-- 具名插槽 -->
       <template v-slot:sex="{$index, row}">
-        {{$index}} : {{ row.sex | ageFilter }}
+        <!-- {{$index}} : {{ row.sex | ageFilter }} -->
+        <el-input v-model="row.sex" :ref="'input'" :id="'input' + $index"></el-input>
       </template>
       <!-- 默认插槽 -->
       <template v-slot="{ row }">
@@ -73,7 +77,7 @@ export default {
         name: '小玲',
         age: 20,
         sex: '2'
-      }, , {
+      }, {
         id: 4,
         name: '张三',
         age: 20,
@@ -119,6 +123,25 @@ export default {
       for(let i = 0; i < count; i++) {
         this.tableData[i].disabled = false
       }
+    },
+    addClick() {
+      const id = this.tableData[this.tableData.length - 1].id + 1
+      this.tableData.push({
+        id: id,
+        name: '张三',
+        age: 20,
+        sex: '1'
+      })
+
+      this.$nextTick(() => {
+        // this.$refs['input'].focus() // 这种方法在我这里出来时可行的
+
+        // 下面这种也行，
+        const index = this.tableData.length - 1
+        const id = '#input' + index
+        const lastInput = document.querySelector(id)
+        lastInput.focus()
+      })
     }
   }
   
