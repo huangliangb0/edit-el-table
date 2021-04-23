@@ -1,6 +1,9 @@
 <template>
   <div id="app">
     <el-row class="action-box" style="margin-bottom: 20px;">
+      <el-button @click="deleteClick($index, row)">
+        删除
+      </el-button>
       <el-button @click="toggleColClick('name')">
         {{ tableColumn[0].edit ? '完成编辑': '编辑姓名列' }}
       </el-button>
@@ -21,14 +24,18 @@
       </el-button>
     </el-row>
     <EditTable
+      show-radio
+      radio-key="id"
       :table-column="tableColumn"
       :table-data="tableData"
+      @radioChange="handleRadioChange"
     > 
       <!-- 具名插槽 -->
       <template v-slot:sex="{$index, row}">
         <!-- {{$index}} : {{ row.sex | ageFilter }} -->
         <el-input v-model="row.sex" :ref="'input'" :id="'input' + $index"></el-input>
       </template>
+      
       <!-- 默认插槽 -->
       <template v-slot="{ row }">
         <el-button type="primary" @click="editCurItemClick(row)" size="mini">编辑</el-button>
@@ -95,6 +102,13 @@ export default {
     }
   },
   methods: {
+    handleRadioChange($index, row) {
+      this.$index = $index
+      this.row = row
+    },
+    deleteClick() {
+      this.tableData.splice(this.$index, 1)
+    },
     // 编辑当前行
     editCurItemClick(row) {
       this.$set(row, 'edit', true)

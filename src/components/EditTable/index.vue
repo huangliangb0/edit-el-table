@@ -12,7 +12,9 @@
     el-table的prop参数说明
       showIndex:     是否显示索引, 默认 true
       loading:       是否显示加载, 默认 false
-      showSelect:    是否显示选择框, 默认 false
+      showSelect:    是否显示多选框, 默认 false
+      showRadio:     是否显示单选框，默认false
+      radioKey：     单选框唯一标识，通过该标识来判断radio是否选中状态，默认值ID
       showPage:      是否显示页码， 默认 true
 
     // 表头，表头的字段继承了el-column，有一些新增的字段
@@ -66,9 +68,8 @@
         label="选项"
         width="55"
       >
-        <template v-slot="scope">
-          <input type="radio" name="my--radio" @change="handleRadioChange(scope)">
-          <!-- <el-radio name="my-radio"  @change="handleRadioChange(scope)"></el-radio> -->
+        <template v-slot="{$index, row}">
+          <input type="radio" name="my--radio" :checked="row[radioKey] === radioId" @change="handleRadioChange($index, row)">
         </template>
       </el-table-column>
       <el-table-column
@@ -139,6 +140,10 @@ export default {
       type: Boolean,
       default: false
     },
+    radioKey: {
+      type: String,
+      default: 'id'
+    },
     showPage: {
       type: Boolean,
       default: true
@@ -167,7 +172,9 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      radioId: ''
+    }
   },
   methods: {
     // 多选
@@ -176,8 +183,10 @@ export default {
     },
 
     // 单选
-    handleRadioChange(scope) {
-      this.$emit('radioChange', scope)
+    handleRadioChange($index, row) {
+      // radioKey可能是ID userid articleid这样的关键词，通过ID的比对来判断radio是否勾选
+      this.radioId = row[this.radioKey]
+      this.$emit('radioChange', {$index, row})
     },
 
     // 切换当前页
