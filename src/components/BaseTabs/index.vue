@@ -72,7 +72,6 @@ export default {
         right: 'flex-end',
         center: 'center'
       }
-
       return {
         display: 'flex',
         'justify-content': justify[this.dir]
@@ -104,6 +103,11 @@ export default {
 <style lang="scss" scoped>
 .nav-switch {
   font-size: 0;
+  margin: 0;
+  padding: 0;
+  li ~ li {
+    margin-left: 10px;
+  }
   li {
     display: inline-block;
     width: 160px;
@@ -117,7 +121,7 @@ export default {
     color: blue;
     position: relative;
     overflow: hidden;
-    margin: 0 10px;
+    margin-bottom: 12px;
     // &:first-child, &:last-child {
     //   box-shadow: none;
     // }
